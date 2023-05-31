@@ -1,0 +1,41 @@
+{
+  "timeZone": "Europe/Madrid",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "Tools",
+        "libraryId": "1eztW3E5D-7US2KeFmapP8a92G1rF4NbT51NhPSJcqcA7ZlXO070raBMV",
+        "version": "0",
+        "developmentMode": true
+      }
+    ],
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "Drive",
+        "version": "v2",
+        "serviceId": "drive"
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/documents",
+    "https://www.googleapis.com/auth/presentations"
+  ],
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [
+      {
+        "menuName": "Borrar output producción",
+        "functionName": "Borraroutputproduccion"
+      },
+      {
+        "menuName": "Borrar output consumo convencional",
+        "functionName": "Borraroutputconsumoconvencional"
+      }
+    ]
+  }
+}
