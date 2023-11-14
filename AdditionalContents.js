@@ -1,5 +1,5 @@
 
-function replaceBudgetTable(budget, budgetTable) {
+function replaceBudgetTable(budget, budgetTable, subtotalColumName = "Total Capítulo (€)") {
   // Get master TableRows
   const titleRow = budgetTable.getRow(0).copy()
   const itemRow = budgetTable.getRow(2).copy()
@@ -18,7 +18,7 @@ function replaceBudgetTable(budget, budgetTable) {
         row = budgetTable.insertTableRow(index, itemRow.copy())
         row.getCell(0).editAsText().replaceText("Concept", element.Concepto).replaceText("Description", element.Descripción)
         row.getCell(1).editAsText().replaceText("quantity", element.Cantidad)
-        row.getCell(2).editAsText().replaceText("subtotal", element["Total Capítulo (€)"])
+        row.getCell(2).editAsText().replaceText("subtotal", element[subtotalColumName])
         break
       case "empty":
         budgetTable.insertTableRow(index, lastRow.copy())
@@ -40,7 +40,7 @@ function createPemAdditionalContents(doc) {
   const budget = getBudget(getOptionalElements = false).filter(e => e.type != "subitem")
   // Take only chapter one and add empty line
   const chapter1Budget = budget.slice(0, budget.findIndex(e => e.Código == "2"))
-  replaceBudgetTable(chapter1Budget, budgetTable)
+  replaceBudgetTable(chapter1Budget, budgetTable, subtotalColumName="Total Capítulo sin BI/CG (PEM) (€)")
 }
 
 

@@ -154,3 +154,18 @@ function importDb() {
   setValue("fechaImportacion", new Date())
 
 }
+
+function completeArray(arr, fixedValue, targetLength) {
+  if (arr.length >= targetLength) {
+    return arr // No need to complete the array if it's already long enough.
+  }
+
+  const entriesToAdd = targetLength - arr.length
+  const completedArray = arr.slice() // Clone the original array to avoid modifying it.
+
+  for (let i = 0; i < entriesToAdd; i++) {
+    completedArray.push(fixedValue)
+  }
+
+  return completedArray
+}

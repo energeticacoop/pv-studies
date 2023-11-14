@@ -2,7 +2,7 @@ function getFinalStudyTemplates() {
   return [
     {
       templateName: getValue("nombreFichero"),
-      templateId: "1ZAxidSJsBKZvLUDMJ5mJBvkRVmmG5OakZk9--3g43vg",
+      templateId: "13ldY9Q8bK7ijZSauJYD2piVbyYfYKtTPjf7qdhWTE6k",
       exportToPDF: false,
       copyComments: true,
       folder: "folder01",
@@ -148,7 +148,7 @@ function get02FolderTemplates() {
       {
         templateName: "VLL - Anexo I - Instrucción autoconsumo abril 2020",
         templateId: "1AuSnyW8ypVFlTCSj3dcW61a4T8NptULR4UBWKpuoD3E",
-        exportToPDF: false,
+        exportToPDF: true,
         copyComments: true,
         folder: "folder0202"
       }
@@ -158,7 +158,7 @@ function get02FolderTemplates() {
       {
         templateName: "Anexo I datos de autoconsumo v.3",
         templateId: "1POtr51vwXX5qXUotJU5gD3jge2AMPcvJTr_QQfJ65RE",
-        exportToPDF: false,
+        exportToPDF: true,
         copyComments: true,
         folder: "folder0202",
       }

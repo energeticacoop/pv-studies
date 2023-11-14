@@ -355,6 +355,7 @@ function getUTMcoordinates() {
     .map((element) => parseFloat(element))
   const result = fromLatLon(latitude, longitude)
   setValue("huso", result.zoneNum)
+  setValue("banda", result.zoneLetter)
   setValue("easting", result.easting)
   setValue("northing", result.northing)
 

@@ -112,13 +112,12 @@ function processEconomicFlows() {
   const energeticaTariffCompensation = getValue("energeticaTariffCompensation")
   const surplusMonthlyMeans = getColumn("surplusMonthlyMeans")
   var compensableSurplusMeans = []
+  const monthlyCompensation = monthlyBillPV.map((monthlyCost, index) =>
+    Math.min(monthlyCost, surplusMonthlyMeans[index] * energeticaTariffCompensation * TAXES))
+
   const monthlyBillComplete = monthlyBillPV.map((monthlyCost, index) => {
-    const monthlyCompensation = Math.min(
-      monthlyCost,
-      surplusMonthlyMeans[index] * energeticaTariffCompensation * TAXES
-    )
-    compensableSurplusMeans[index] = monthlyCompensation / (energeticaTariffCompensation * TAXES)
-    return monthlyCost - monthlyCompensation
+    compensableSurplusMeans[index] = monthlyCompensation[index] / (energeticaTariffCompensation * TAXES)
+    return monthlyCost - monthlyCompensation[index]
   })
   setColumn("monthlyBillComplete", monthlyBillComplete)
   setColumn("compensableSurplusMeans", compensableSurplusMeans)
@@ -130,6 +129,75 @@ function processEconomicFlows() {
     return monthlyCost - monthlyCompensation
   })
   setColumn("monthlyBillLimitless", monthlyBillLimitless)
+
+  SpreadsheetApp.flush()
+
+
+  // Demand with PV, surplus compensation and Som Energia's "Flux Solar"
+  const totalBillBefore = getValue("facturaAntes")
+  const fluxCoefficient = getValue("fluxCoefficient")
+  const monthlyBillBeforeFlux = [...monthlyBillComplete]
+  const monthlyConvertedToSoles = monthlyBillComplete.map((monthlyCost, index) => (monthlyCost - monthlyBillLimitless[index]))
+  setColumn("monthlyConvertedToSoles", monthlyConvertedToSoles)
+  const monthlySolesInput = monthlyConvertedToSoles.map(e => e * fluxCoefficient)
+
+  var solesQueue = []
+  var anualSavings = []
+
+  var currentBill = []
+  for (let year = 0; year < 25; year++) { // For each year in 25 years
+
+    currentBill = [...monthlyBillBeforeFlux]
+    for (let month = 0; month < 12; month++) { // For each month
+
+      const currentMonth = month + 12 * year
+      console.log(`******** Paso ${currentMonth.toString()}: mes ${month}, año ${year} ********`)
+      console.log("   Cola de soles: " + JSON.stringify(solesQueue))
+      console.log("   Factura mensual antes de Flux: " + currentBill[month])
+
+      // Extract soles and generate monthly discout
+      while (solesQueue.length > 0) { // While there are soles in queue
+        const oldestSoles = solesQueue.shift() // Take oldest soles
+        if (currentMonth - oldestSoles.monthOfGeneration < 60) { // If those soles are still valid
+
+          if (currentBill[month] >= oldestSoles.value) { // If all soles are discountable
+            currentBill[month] -= oldestSoles.value
+            console.log("   Consumidos soles totales: " + oldestSoles.value.toString())
+          } else { // If there is an excess of soles
+            oldestSoles.value -= currentBill[month]
+            console.log("   Consumidos soles parciales: " + currentBill[month])
+            solesQueue.unshift(oldestSoles)
+            currentBill[month] -= currentBill[month]
+            break
+          }
+          console.log(` Factura mensual: ${currentBill[month]}`)
+
+          if (currentBill[month] == 0) break // If bill is already zero, stop 
+
+        } else { // If soles not valid anymore
+          console.log("   Soles caducados, se eliminan: " + oldestSoles.value)
+        }
+
+      }
+
+      // Generate soles for this month and add them to the queue
+      if (monthlySolesInput[month] > 0) {
+        const soles = {
+          "value": monthlySolesInput[month],
+          "monthOfGeneration": currentMonth
+        }
+        solesQueue.push(soles)
+        console.log("   Generados soles: " + soles.value.toString())
+      }
+
+    }
+
+    anualSavings.push(totalBillBefore - currentBill.reduce(sumVector)) // Ahorro anual: factura antes - total de factura después
+
+  }
+
+  setColumn("monthlyBillFlux", currentBill)
+  setColumn("ahorrosAnuales", anualSavings)
 
 }
 

@@ -153,7 +153,7 @@ function createDocumentFromTemplate(template) {
     // Manage additional actions for templates with special tables
     if (templateId == "1Q7aRFNjqB_Kc9daRPDRhs2kqt7XuZMYmhGRQjLVHBY8") createPemAdditionalContents(doc)
     if (templateId == "1xttGTW5xY0mnyuCEU8gEQwQ926WH4vTG0mZS4CEKuJQ") createBillAdditionalContents(doc)
-    if (templateId == "1ZAxidSJsBKZvLUDMJ5mJBvkRVmmG5OakZk9--3g43vg") createFinalStudyAdditionalContents(doc)
+    if (templateId == "13ldY9Q8bK7ijZSauJYD2piVbyYfYKtTPjf7qdhWTE6k") createFinalStudyAdditionalContents(doc)
     if (templateId == "1k9lYTmxMsINC6U49w1NWOu0-3dGkYUBF5yrhKmkGb04") createInstallationGuideAdditionalContents(doc)
 
     doc.saveAndClose()
